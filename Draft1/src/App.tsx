@@ -185,7 +185,9 @@ export default function App() {
             </div>
           )}
 
-          {activeScreen === 'Knowledge Graph' && <KnowledgeGraph />}
+          {activeScreen === 'Knowledge Graph' && (
+            <KnowledgeGraph onSelectCompany={handleSelectCompany} />
+          )}
 
           {activeScreen === 'Market Signals' && <MarketSignals />}
 

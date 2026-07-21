@@ -20,7 +20,11 @@ interface Edge {
   label: string;
 }
 
-export default function KnowledgeGraph() {
+interface KnowledgeGraphProps {
+  onSelectCompany: (companyId: string) => void;
+}
+
+export default function KnowledgeGraph({ onSelectCompany }: KnowledgeGraphProps) {
   // Set up predefined node positions mapping relationships centering around BMW Group
   const initialNodes: Node[] = [
     { id: 'bmw', label: 'BMW Group', type: 'Company', x: 300, y: 220, details: { title: 'BMW Group (BMW GY)', description: 'German multinational manufacturer of luxury vehicles and motorcycles.', metrics: { 'Market Cap': '€64.8B', 'Credit Rating': 'A2 / A (Stable)', 'Readiness Score': '88%' } } },
@@ -413,7 +417,7 @@ export default function KnowledgeGraph() {
                 {selectedNode.type === 'Company' ? (
                   <button
                     onClick={() => {
-                      // Custom navigation direct to Client 360 overview
+                      onSelectCompany(selectedNode.id);
                     }}
                     className="w-full py-2 bg-[#0A84FF] hover:bg-[#0070E0] text-white rounded-md text-center font-semibold cursor-pointer"
                   >
