@@ -24,7 +24,8 @@ import {
   RefreshCw,
   Clock,
   HelpCircle,
-  Building2
+  Building2,
+  Zap
 } from "lucide-react";
 
 // Views
@@ -40,6 +41,7 @@ import MyActions from "./components/MyActions";
 import MarketMonitor from "./components/MarketMonitor";
 import Reports from "./components/Reports";
 import Admin from "./components/Admin";
+import AIScenarioSimulator from "./components/AIScenarioSimulator";
 
 import { Issuer, MarketIndicator, Alert, MyAction } from "./types";
 
@@ -293,6 +295,16 @@ export default function App() {
             </button>
 
             <button 
+              onClick={() => setActiveTab("ai-scenario")}
+              className={`w-full text-left px-2.5 py-1.5 rounded text-xs font-medium flex items-center justify-between transition cursor-pointer ${
+                activeTab === "ai-scenario" ? "bg-slate-900 text-purple-400 font-bold border-l-2 border-purple-500" : "text-slate-400 hover:text-white hover:bg-slate-900/40"
+              }`}
+            >
+              <span className="flex items-center gap-2"><Zap className="h-3.5 w-3.5" /> AI Scenario Simulator</span>
+              <span className="px-1.5 py-0.2 bg-purple-950 text-purple-400 text-[8px] font-bold rounded">NEW</span>
+            </button>
+
+            <button 
               onClick={() => setActiveTab("graph")}
               className={`w-full text-left px-2.5 py-1.5 rounded text-xs font-mono font-medium flex items-center justify-between transition cursor-pointer ${
                 activeTab === "graph" ? "bg-slate-900 text-sky-400 font-bold border-l-2 border-sky-500" : "text-slate-400 hover:text-white hover:bg-slate-900/40"
@@ -454,6 +466,9 @@ export default function App() {
                   issuers={issuers}
                   onSelectIssuer={handleSelectIssuer}
                 />
+              )}
+              {activeTab === "ai-scenario" && (
+                <AIScenarioSimulator />
               )}
               {activeTab === "graph" && (
                 <GraphView />
