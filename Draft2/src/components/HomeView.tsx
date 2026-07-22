@@ -239,7 +239,7 @@ export default function HomeView({ issuers, alerts, actions, onSelectIssuer, onN
       {/* Charts Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4" id="home-charts-grid">
         {/* Opportunity Trend Line */}
-        <div className="border border-slate-800 bg-slate-950 p-4 rounded lg:col-span-2 flex flex-col h-[300px]" id="chart-opp-trend">
+        <div className="border border-slate-800 bg-slate-950 p-4 rounded lg:col-span-2 flex flex-col h-75" id="chart-opp-trend">
           <span className="text-xs font-mono text-slate-400 font-semibold tracking-wide uppercase mb-3 block">Opportunity & Deal Volume Trend</span>
           <div className="flex-1 w-full min-h-0">
             <ResponsiveContainer width="100%" height="100%">
@@ -251,8 +251,8 @@ export default function HomeView({ issuers, alerts, actions, onSelectIssuer, onN
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" vertical={false} />
-                <XAxis dataKey="month" stroke="#64748b" fontSize={10} fontClassName="font-mono" tickLine={false} />
-                <YAxis stroke="#64748b" fontSize={10} fontClassName="font-mono" tickLine={false} />
+                <XAxis dataKey="month" stroke="#64748b" fontSize={10} className="font-mono" tickLine={false} />
+                <YAxis stroke="#64748b" fontSize={10} className="font-mono" tickLine={false} />
                 <Tooltip 
                   contentStyle={{ backgroundColor: "#0f172a", border: "1px solid #334155" }} 
                   labelStyle={{ fontFamily: "monospace", color: "#94a3b8" }}
@@ -264,7 +264,7 @@ export default function HomeView({ issuers, alerts, actions, onSelectIssuer, onN
         </div>
 
         {/* Sector Allocation Pie */}
-        <div className="border border-slate-800 bg-slate-950 p-4 rounded flex flex-col h-[300px]" id="chart-sector-mix">
+        <div className="border border-slate-800 bg-slate-950 p-4 rounded flex flex-col h-75" id="chart-sector-mix">
           <span className="text-xs font-mono text-slate-400 font-semibold tracking-wide uppercase mb-3 block">Sector Pipeline Allocation</span>
           <div className="flex-1 w-full min-h-0 flex items-center justify-center">
             <ResponsiveContainer width="100%" height="100%">
@@ -300,7 +300,7 @@ export default function HomeView({ issuers, alerts, actions, onSelectIssuer, onN
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4" id="home-sec-grid">
         {/* Funding Product Mix & Refinancing Timeline */}
-        <div className="border border-slate-800 bg-slate-950 p-4 rounded flex flex-col h-[280px]" id="chart-product-mix">
+        <div className="border border-slate-800 bg-slate-950 p-4 rounded flex flex-col h-70" id="chart-product-mix">
           <span className="text-xs font-sans text-slate-400 font-semibold tracking-wide uppercase mb-3 block">Funding Product Distribution</span>
           <div className="flex-1 w-full min-h-0">
             <ResponsiveContainer width="100%" height="100%">
@@ -316,7 +316,7 @@ export default function HomeView({ issuers, alerts, actions, onSelectIssuer, onN
         </div>
 
         {/* Top 5 Origination Targets Chart */}
-        <div className="border border-slate-800 bg-slate-950 p-4 rounded flex flex-col h-[280px]" id="chart-top-targets">
+        <div className="border border-slate-800 bg-slate-950 p-4 rounded flex flex-col h-70" id="chart-top-targets">
           <span className="text-xs font-sans text-slate-400 font-semibold tracking-wide uppercase mb-3 block">Top Targets: Score vs. Funding</span>
           <div className="flex-1 w-full min-h-0">
             <ResponsiveContainer width="100%" height="100%">
@@ -337,7 +337,7 @@ export default function HomeView({ issuers, alerts, actions, onSelectIssuer, onN
         </div>
 
         {/* Upcoming Meetings & Task Summary */}
-        <div className="border border-slate-800 bg-slate-950 p-4 rounded flex flex-col h-[280px] overflow-hidden" id="task-queue-widget">
+        <div className="border border-slate-800 bg-slate-950 p-4 rounded flex flex-col h-70 overflow-hidden" id="task-queue-widget">
           <div className="flex justify-between items-center mb-3">
             <span className="text-xs font-sans text-slate-400 font-semibold tracking-wide uppercase">Priority Work Queue</span>
             <button onClick={() => onNavigate("My Actions")} className="text-[10px] font-sans text-sky-400 hover:underline flex items-center cursor-pointer">

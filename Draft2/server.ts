@@ -158,6 +158,86 @@ async function startServer() {
     res.json({ success: true, issuer: fullIssuer });
   });
 
+  // Scenario Simulation Endpoint
+  app.post("/api/scenario-simulate", (req, res) => {
+    const { scenarioType, changeInRate, region, industry, timeHorizon, factors } = req.body;
+
+    if (!scenarioType || typeof changeInRate !== "number" || !region || !industry || !timeHorizon) {
+      return res.status(400).json({ error: "Missing scenario parameters" });
+    }
+
+    const baseImpact = changeInRate < 0 ? "Positive" : changeInRate > 0 ? "Negative" : "Neutral";
+    const revenueMultiplier = Math.max(0.55, 1 - changeInRate * 0.35);
+    const opportunities = Math.max(8, Math.round(16 + (Math.abs(changeInRate) * 20))); 
+    const revenueImpact = Number((12 + Math.abs(changeInRate) * 4).toFixed(1));
+    const confidence = Math.max(70, Math.min(95, 90 - Math.abs(changeInRate) * 8));
+    const riskLevel = Math.abs(changeInRate) >= 0.75 ? "High" : Math.abs(changeInRate) >= 0.4 ? "Medium" : "Low";
+
+    const reasoning = [
+      `${scenarioType} of ${changeInRate > 0 ? `+${changeInRate}%` : `${changeInRate}%`} drives ${baseImpact.toLowerCase()} market conditions for ${region}.`,
+      `Sector-specific pulse in ${industry} is sensitive to ECB moves and funding spreads.`,
+      factors?.ecrPolicy ? "ECB policy shift is already priced into dealer origination windows." : "Additional central bank policy confirmation would reduce uncertainty."
+    ];
+
+    const recommendations = [
+      {
+        title: `Schedule meeting with ${industry === "Automotive" ? "BMW Treasury" : "Key sector clients"}`,
+        priority: "High",
+        action: `Position ${industry} clients for ${scenarioType.toLowerCase()} outcomes.`
+      },
+      {
+        title: `Prepare industry-specific financing pitch for ${industry}`,
+        priority: "Medium",
+        action: "Update term sheets and client pricing narratives."
+      },
+      {
+        title: "Monitor risk signals across primary issuance windows",
+        priority: "Low",
+        action: "Track headline macro and spread movements daily."
+      }
+    ];
+
+    const scenarioImpactData = [
+      { month: "Today", revenue: 18, opportunity: 8 },
+      { month: "1 Month", revenue: 19.2, opportunity: 11 },
+      { month: "2 Months", revenue: 20.6, opportunity: 13 },
+      { month: "3 Months", revenue: 21.8, opportunity: 15 },
+      { month: "6 Months", revenue: revenueImpact, opportunity: opportunities }
+    ];
+
+    const impactBySectorData = [
+      { name: industry, value: 42 },
+      { name: "Industrial", value: 25 },
+      { name: "Energy", value: 15 },
+      { name: "Technology", value: 10 },
+      { name: "Other", value: 8 }
+    ];
+
+    const scenarioTimelineData = [
+      { stage: "Event", time: "Today", status: "completed" },
+      { stage: "Market Effect", time: "Week 1", status: "completed" },
+      { stage: "Client Impact", time: "Week 2-3", status: "in-progress" },
+      { stage: "Action", time: "Month 2-3", status: "upcoming" },
+      { stage: "Outcome", time: "Month 6+", status: "upcoming" },
+    ];
+
+    res.json({
+      result: {
+        marketImpact: baseImpact,
+        confidenceScore: confidence,
+        opportunities,
+        riskLevel,
+        timeHorizon,
+        estimatedRevenueImpact: revenueImpact,
+        reasoning,
+        recommendations,
+        scenarioImpactData,
+        impactBySectorData,
+        scenarioTimelineData,
+      }
+    });
+  });
+
   // Copilot Assistant Endpoint (Integrated with Gemini 3.5 Flash server-side)
   app.post("/api/copilot", async (req, res) => {
     try {
