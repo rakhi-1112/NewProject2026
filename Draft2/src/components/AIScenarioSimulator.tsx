@@ -50,6 +50,23 @@ interface ScenarioState {
   };
 }
 
+interface ScenarioImpactPoint {
+  month: string;
+  revenue: number;
+  opportunity: number;
+}
+
+interface SectorImpactPoint {
+  name: string;
+  value: number;
+}
+
+interface ScenarioTimelinePoint {
+  stage: string;
+  time: string;
+  status: "completed" | "in-progress" | "upcoming";
+}
+
 interface ScenarioResult {
   marketImpact: "Positive" | "Negative" | "Neutral";
   confidenceScore: number;
@@ -63,6 +80,9 @@ interface ScenarioResult {
     priority: "High" | "Medium" | "Low";
     action: string;
   }[];
+  scenarioImpactData: ScenarioImpactPoint[];
+  impactBySectorData: SectorImpactPoint[];
+  scenarioTimelineData: ScenarioTimelinePoint[];
 }
 
 const COLORS = ["#8B5CF6", "#3B82F6", "#10B981", "#F59E0B", "#EF4444"];
@@ -81,72 +101,34 @@ export default function AIScenarioSimulator() {
   });
 
   const [simulating, setSimulating] = useState(false);
-  const [result, setResult] = useState<ScenarioResult | null>({
-    marketImpact: "Positive",
-    confidenceScore: 91,
-    opportunities: 18,
-    riskLevel: "Medium",
-    timeHorizon: "6 Months",
-    estimatedRevenueImpact: 14.2,
-    reasoning: [
-      "ECB rate reduction lowers borrowing costs across European markets",
-      "High debt maturities in 2025-2027 for automotive sector",
-      "Strong ESG push increases green financing activity",
-    ],
-    recommendations: [
-      {
-        title: "Schedule meeting with BMW Treasury team",
-        priority: "High",
-        action: "Discuss refinancing window opportunities",
-      },
-      {
-        title: "Prepare green bond proposal for Siemens",
-        priority: "High",
-        action: "Capitalize on ESG momentum",
-      },
-      {
-        title: "Engage VW on sustainability linked loan",
-        priority: "Medium",
-        action: "Position for sustainability initiatives",
-      },
-      {
-        title: "Monitor BASF working capital requirements",
-        priority: "Low",
-        action: "Track upcoming financing needs",
-      },
-    ],
-  });
+  const [result, setResult] = useState<ScenarioResult | null>(null);
+  const [errorText, setErrorText] = useState<string | null>(null);
 
-  const scenarioImpactData = [
-    { month: "Today", revenue: 20, opportunity: 10 },
-    { month: "1 Month", revenue: 22, opportunity: 14 },
-    { month: "2 Months", revenue: 24, opportunity: 16 },
-    { month: "3 Months", revenue: 25, opportunity: 18 },
-    { month: "6 Months", revenue: 28, opportunity: 20 },
-  ];
-
-  const impactBySectorData = [
-    { name: "Automotive", value: 42 },
-    { name: "Industrial", value: 25 },
-    { name: "Energy", value: 15 },
-    { name: "Technology", value: 10 },
-    { name: "Other", value: 8 },
-  ];
-
-  const scenarioTimelineData = [
-    { stage: "Event", time: "Today", status: "completed" },
-    { stage: "Market Effect", time: "Week 1", status: "completed" },
-    { stage: "Client Impact", time: "Week 2-3", status: "in-progress" },
-    { stage: "Booking Yields", time: "Month 2-3", status: "upcoming" },
-    { stage: "Deal Realizeable", time: "Month 3-6", status: "upcoming" },
-    { stage: "Outcome", time: "Month 6+", status: "upcoming" },
-  ];
-
-  const handleSimulate = () => {
+  const handleSimulate = async () => {
     setSimulating(true);
-    setTimeout(() => {
+    setErrorText(null);
+
+    try {
+      const response = await fetch("/api/scenario-simulate", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(scenario),
+      });
+
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data?.error || "Scenario simulation failed");
+      }
+
+      setResult(data.result);
+    } catch (error: any) {
+      setErrorText(error?.message || "Unable to simulate scenario");
+      setResult(null);
+    } finally {
       setSimulating(false);
-    }, 1500);
+    }
   };
 
   const handleFactorChange = (factor: string) => {
@@ -186,7 +168,11 @@ export default function AIScenarioSimulator() {
           {/* Scenario Controls */}
           <div className="bg-slate-800/50 border border-slate-700 rounded-xl p-8">
             <h2 className="text-xl font-semibold text-white mb-6">Scenario Configuration</h2>
-            
+            {errorText && (
+              <div className="mb-4 rounded-lg bg-rose-950/80 border border-rose-700 p-4 text-sm text-rose-200">
+                {errorText}
+              </div>
+            )}
             {/* First Row */}
             <div className="grid grid-cols-4 gap-6 mb-6">
               <div>
@@ -464,7 +450,7 @@ export default function AIScenarioSimulator() {
                     Scenario Impact Over Time
                   </h3>
                   <ResponsiveContainer width="100%" height={250}>
-                    <LineChart data={scenarioImpactData}>
+                    <LineChart data={result.scenarioImpactData}>
                       <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
                       <XAxis stroke="#94a3b8" />
                       <YAxis stroke="#94a3b8" />
@@ -501,7 +487,7 @@ export default function AIScenarioSimulator() {
                   <ResponsiveContainer width="100%" height={250}>
                     <PieChart>
                       <Pie
-                        data={impactBySectorData}
+                        data={result.impactBySectorData}
                         cx="50%"
                         cy="50%"
                         labelLine={false}
@@ -510,8 +496,8 @@ export default function AIScenarioSimulator() {
                         fill="#8884d8"
                         dataKey="value"
                       >
-                        {COLORS.map((color, index) => (
-                          <Cell key={`cell-${index}`} fill={color} />
+                        {result.impactBySectorData.map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                         ))}
                       </Pie>
                       <Tooltip
@@ -531,7 +517,7 @@ export default function AIScenarioSimulator() {
               <div className="bg-slate-800/50 border border-slate-700 rounded-xl p-6">
                 <h3 className="text-lg font-semibold text-white mb-6">Scenario Timeline</h3>
                 <div className="flex items-center justify-between">
-                  {scenarioTimelineData.map((item, idx) => (
+                  {result.scenarioTimelineData.map((item, idx) => (
                     <div key={idx} className="flex flex-col items-center">
                       <div
                         className={`w-12 h-12 rounded-full flex items-center justify-center font-bold mb-2 ${
@@ -550,8 +536,8 @@ export default function AIScenarioSimulator() {
                         {item.stage}
                       </p>
                       <p className="text-slate-500 text-xs mt-1">{item.time}</p>
-                      {idx < scenarioTimelineData.length - 1 && (
-                        <div className="absolute w-12 h-0.5 bg-slate-600 ml-20 top-6"></div>
+                      {idx < result.scenarioTimelineData.length - 1 && (
+                        <div className="absolute w-12 h-0.1 bg-slate-600 ml-20 top-6"></div>
                       )}
                     </div>
                   ))}
