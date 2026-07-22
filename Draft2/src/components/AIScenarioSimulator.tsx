@@ -160,7 +160,7 @@ export default function AIScenarioSimulator() {
   };
 
   return (
-    <div className="flex h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950">
+    <div className="flex h-screen bg-linear-to-b from-slate-950 via-slate-900 to-slate-950">
       {/* Main Content */}
       <div className="flex-1 overflow-auto">
         {/* Header */}
@@ -195,7 +195,7 @@ export default function AIScenarioSimulator() {
                 </label>
                 <select
                   value={scenario.scenarioType}
-                  onChange={(e) =>
+                  onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
                     setScenario({ ...scenario, scenarioType: e.target.value })
                   }
                   className="w-full bg-slate-700 text-white px-4 py-2 rounded-lg border border-slate-600 hover:border-slate-500 cursor-pointer"
@@ -213,7 +213,7 @@ export default function AIScenarioSimulator() {
                 </label>
                 <select
                   value={scenario.changeInRate}
-                  onChange={(e) =>
+                  onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
                     setScenario({ ...scenario, changeInRate: parseFloat(e.target.value) })
                   }
                   className="w-full bg-slate-700 text-white px-4 py-2 rounded-lg border border-slate-600 hover:border-slate-500 cursor-pointer"
@@ -234,7 +234,7 @@ export default function AIScenarioSimulator() {
                 </label>
                 <select
                   value={scenario.region}
-                  onChange={(e) =>
+                  onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
                     setScenario({ ...scenario, region: e.target.value })
                   }
                   className="w-full bg-slate-700 text-white px-4 py-2 rounded-lg border border-slate-600 hover:border-slate-500 cursor-pointer"
@@ -252,7 +252,7 @@ export default function AIScenarioSimulator() {
                 </label>
                 <select
                   value={scenario.industry}
-                  onChange={(e) =>
+                  onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
                     setScenario({ ...scenario, industry: e.target.value })
                   }
                   className="w-full bg-slate-700 text-white px-4 py-2 rounded-lg border border-slate-600 hover:border-slate-500 cursor-pointer"
@@ -274,7 +274,7 @@ export default function AIScenarioSimulator() {
                 </label>
                 <select
                   value={scenario.timeHorizon}
-                  onChange={(e) =>
+                  onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
                     setScenario({ ...scenario, timeHorizon: e.target.value })
                   }
                   className="w-full bg-slate-700 text-white px-4 py-2 rounded-lg border border-slate-600 hover:border-slate-500 cursor-pointer"
@@ -317,7 +317,7 @@ export default function AIScenarioSimulator() {
             <button
               onClick={handleSimulate}
               disabled={simulating}
-              className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-semibold py-3 rounded-lg transition disabled:opacity-50"
+              className="w-full bg-linear-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-semibold py-3 rounded-lg transition disabled:opacity-50"
             >
               {simulating ? "Simulating..." : "🚀 Simulate Scenario"}
             </button>
@@ -328,7 +328,7 @@ export default function AIScenarioSimulator() {
             <>
               {/* Scenario Summary */}
               <div className="grid grid-cols-2 gap-6">
-                <div className="bg-gradient-to-br from-slate-800/50 to-slate-800/30 border border-slate-700 rounded-xl p-6">
+                <div className="bg-linear-to-br from-slate-800/50 to-slate-800/30 border border-slate-700 rounded-xl p-6">
                   <h3 className="text-lg font-semibold text-white mb-6">Scenario Summary</h3>
 
                   <div className="space-y-4">
@@ -436,7 +436,7 @@ export default function AIScenarioSimulator() {
                 </div>
 
                 {/* AI Reasoning */}
-                <div className="bg-gradient-to-br from-slate-800/50 to-slate-800/30 border border-slate-700 rounded-xl p-6">
+                <div className="bg-linear-to-br from-slate-800/50 to-slate-800/30 border border-slate-700 rounded-xl p-6">
                   <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
                     <Zap className="w-5 h-5 text-purple-400" />
                     AI Reasoning Behind Predictions
@@ -448,7 +448,7 @@ export default function AIScenarioSimulator() {
                         key={idx}
                         className="flex gap-3 p-3 bg-slate-700/30 rounded-lg border border-slate-600/50"
                       >
-                        <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0 mt-0.5" />
+                        <CheckCircle className="w-5 h-5 text-green-400 shrink-0 mt-0.5" />
                         <p className="text-slate-300 text-sm">{reason}</p>
                       </div>
                     ))}
@@ -568,7 +568,7 @@ export default function AIScenarioSimulator() {
                       className="flex items-start gap-4 p-4 bg-slate-700/30 rounded-lg border border-slate-600/50 hover:border-slate-500 transition"
                     >
                       <div
-                        className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 ${
+                        className={`w-10 h-10 rounded-lg flex items-center justify-center shrink-0 ${
                           rec.priority === "High"
                             ? "bg-red-500/20"
                             : rec.priority === "Medium"
